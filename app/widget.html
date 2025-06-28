@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>12-Month Revenue Chart: PT vs Sale</title>
+  <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <title></title>
+        <meta name="description" content="" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="" />
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script
+            src="https://code.jquery.com/jquery-3.7.1.min.js"
+            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+            crossorigin="anonymous"
+        ></script>
+        <script src="https://js.zohostatic.com/creator/widgets/version/1.0/widgetsdk-min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/i18next@21.6.10/i18next.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/jquery-i18next@1.2.1/jquery-i18next.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/i18next-browser-languagedetector@6.1.3/i18nextBrowserLanguageDetector.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/i18next-http-backend@1.3.2/i18nextHttpBackend.min.js"></script>
+  <style>
+    body {
+      background: #f6f8fa;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .chart-container {
+      max-width: 1900px;
+      margin: 40px auto;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+      padding: 40px 40px 60px 80px;
+      position: relative;
+    }
+    .chart-title {
+      font-size: 1.6rem;
+      font-weight: 600;
+      margin-bottom: 24px;
+      color: #222;
+      letter-spacing: 1px;
+      text-align: center;
+    }
+    .legend {
+      display: flex;
+      gap: 24px;
+      margin-bottom: 24px;
+      justify-content: center;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 1rem;
+      color: #555;
+    }
+    .legend-color {
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+      display: inline-block;
+    }
+    .legend-pt { background: #4e79a7; }
+    .legend-sale { background: #f28e2b; }
+
+    .chart {
+      display: flex;
+      align-items: center;
+      height: 320px;
+      gap: 26px;
+      position: relative;
+      padding:0 36px 0 36px;
+      justify-content: center;
+    }
+    .category {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 66px;
+    }
+    .bars {
+      display: flex;
+      gap: 6px;
+      align-items: flex-end;
+      height: 240px;
+    }
+    .bar {
+      width: 34px;
+      border-radius: 4px 4px 0 0;
+      transition: height 0.3s, box-shadow 0.2s;
+      cursor: pointer;
+      position: relative;
+    }
+    .bar.pt {
+      background: linear-gradient(180deg, #4e79a7 80%, #a0c4ff 100%);
+    }
+    .bar.sale {
+      background: linear-gradient(180deg, #f28e2b 80%, #ffd6a0 100%);
+    }
+    .bar:hover {
+      box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+      opacity: 0.85;
+    }
+    .bar-value {
+  position: absolute;
+  top: -28px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #fff;
+  color: #222;
+  font-size: 0.95rem;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  opacity: 1; /* Always visible */
+  pointer-events: none;
+  transition: opacity 0.2s;
+  z-index: 2;
+}
+    
+    .label {
+      margin-top: 10px;
+      font-size: 0.95rem;
+      color: #666;
+      letter-spacing: 1px;
+    }
+    .y-axis {
+      position: absolute;
+      left: 0;
+      top: 60px;
+      height: 240px;
+      width: 60px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      font-size: 0.95rem;
+      color: #bbb;
+      z-index: 1;
+      padding-left: 66px;
+    }
+    .y-axis-line {
+      border-top: 1px solid #eee;
+      width: 100%;
+      position: absolute;
+      left: 60px;
+      right: 0;
+      z-index: 0;
+    }
+    .y-axis-label {
+      position: relative;
+      left: 0;
+      top: -8px;
+    }
+  </style>
+</head>
+<body>
+    <div class="chart-container">
+      <div class="chart-title">12-Month Revenue Overview: PT vs Sale</div>
+      <div class="legend">
+        <div class="legend-item"><span class="legend-color legend-pt"></span>PT</div>
+        <div class="legend-item"><span class="legend-color legend-sale"></span>Sale</div>
+      </div>
+      <div id="y-axis" class="y-axis"></div>
+      <div id="chart" class="chart"></div>
+    </div>
+    <script>
+      // Example data
+      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      const ptData =  [45000, 155000, 65000, 35000, 75000, 40000, 50000, 60000, 30000, 70000, 35000, 80000];
+      const saleData = [70000, 65000, 80000, 45000, 90000, 55000, 68000, 85000, 45000, 80000, 60000, 95000];
+  
+      // Find max value for scaling
+      const allValues = ptData.concat(saleData);
+      const maxValue = Math.max(...allValues);
+      // Round up to nearest 10,000 for a clean axis
+      const axisMax = Math.ceil(maxValue / 10000) * 10000;
+  
+      // Number of y-axis steps
+      const steps = 5;
+      const stepValue = axisMax / steps;
+  
+      // Render y-axis
+    //   const yAxis = document.getElementById('y-axis');
+    //   yAxis.innerHTML = '';
+    //   for (let i = 0; i <= steps; i++) {
+    //     const value = axisMax - i * stepValue;
+    //     const percent = i / steps * 100;
+    //     const label = document.createElement('div');
+    //     label.className = 'y-axis-label';
+    //     label.style.height = (240 / steps) + 'px';
+    //     label.innerHTML = `
+    //       <span>${value >= 1000 ? (value/1000)+'k' : value}</span>
+    //       <div class="y-axis-line" style="top:0; left:60px; right:0; width:calc(100% - 60px);"></div>
+    //     `;
+    //     yAxis.appendChild(label);
+    //   }
+  
+      // Render bars
+      const chart = document.getElementById('chart');
+      chart.innerHTML = '';
+      for (let i = 0; i < months.length; i++) {
+        const category = document.createElement('div');
+        category.className = 'category';
+  
+        // Calculate bar heights
+        const ptHeight = (ptData[i] / axisMax) * 240;
+        const saleHeight = (saleData[i] / axisMax) * 240;
+  
+        category.innerHTML = `
+          <div class="bars">
+            <div class="bar pt" style="height:${ptHeight}px;">
+              <span class="bar-value">${Math.round(ptData[i]/100)/10}k</span>
+            </div>
+            <div class="bar sale" style="height:${saleHeight}px;">
+              <span class="bar-value">${Math.round(saleData[i]/100)/10}k</span>
+            </div>
+          </div>
+          <div class="label">${months[i]}</div>
+        `;
+        chart.appendChild(category);
+      }
+    </script>
+    <script src="https://creator.zoho.com/api/javascript/zoho/creator/v2/zoho-creator-sdk.min.js"></script>
+    <script>
+        function submitData() {
+            var appName = document.getElementById("appName").value;
+            var formName = document.getElementById("formName").value;
+            var jsonDataText = document.getElementById("jsonData").value;
+
+            try {
+                var jsonData = JSON.parse(jsonDataText); // Parse the input JSON data
+
+                ZOHO.CREATOR.init().then(function (data) {
+                    jsonData.forEach((record) => {
+                        var formData = {
+                            data: record.data, // No need to fix the keys; take directly from JSON
+                        };
+                        console.log("formData", formData);
+
+                        var config = {
+                            appName: appName,
+                            formName: formName,
+                            data: formData.data,
+                        };
+
+                        // Gọi API ZOHO Creator để thêm record
+                        ZOHO.CREATOR.API.addRecord(config)
+                            .then(function (response) {
+                                if (response.code == 3000) {
+                                    console.log(
+                                        "Record added successfully"
+                                    );
+                                } else {
+                                    console.error(
+                                        "Error adding record:",
+                                        response
+                                    );
+                                }
+                            })
+                            .catch(function (error) {
+                                console.error("API call failed:", error);
+                            });
+                    });
+                });
+            } catch (e) {
+                console.error("Invalid JSON data", e);
+                alert("Please enter valid JSON data.");
+            }
+        }
+    </script>
+    <script src="./main.js"></script>
+  </body>
+</html>
