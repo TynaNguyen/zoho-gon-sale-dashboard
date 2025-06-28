@@ -223,5 +223,54 @@
         chart.appendChild(category);
       }
     </script>
+    <script src="https://creator.zoho.com/api/javascript/zoho/creator/v2/zoho-creator-sdk.min.js"></script>
+    <script>
+        function submitData() {
+            var appName = document.getElementById("appName").value;
+            var formName = document.getElementById("formName").value;
+            var jsonDataText = document.getElementById("jsonData").value;
+
+            try {
+                var jsonData = JSON.parse(jsonDataText); // Parse the input JSON data
+
+                ZOHO.CREATOR.init().then(function (data) {
+                    jsonData.forEach((record) => {
+                        var formData = {
+                            data: record.data, // No need to fix the keys; take directly from JSON
+                        };
+                        console.log("formData", formData);
+
+                        var config = {
+                            appName: appName,
+                            formName: formName,
+                            data: formData.data,
+                        };
+
+                        // Gọi API ZOHO Creator để thêm record
+                        ZOHO.CREATOR.API.addRecord(config)
+                            .then(function (response) {
+                                if (response.code == 3000) {
+                                    console.log(
+                                        "Record added successfully"
+                                    );
+                                } else {
+                                    console.error(
+                                        "Error adding record:",
+                                        response
+                                    );
+                                }
+                            })
+                            .catch(function (error) {
+                                console.error("API call failed:", error);
+                            });
+                    });
+                });
+            } catch (e) {
+                console.error("Invalid JSON data", e);
+                alert("Please enter valid JSON data.");
+            }
+        }
+    </script>
+    <script src="./main.js"></script>
   </body>
 </html>
