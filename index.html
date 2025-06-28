@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>12-Month Revenue Chart: PT vs Sale</title>
+        <title></title>
         <meta name="description" content="" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="stylesheet" href="" />
-        <link rel="stylesheet" href="./assets/tailwind.min.css">
+        <script src="https://cdn.tailwindcss.com"></script>
         <script
             src="https://code.jquery.com/jquery-3.7.1.min.js"
             integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
@@ -156,6 +156,85 @@
   </style>
 </head>
 <body>
+  <div class="main" style="">
+    <div
+        class="container"
+        style="width: 980px; max-width: 100%; margin: auto"
+    >
+        <img
+            src="https://go.rx-vietnamshows.com/nev-a4-header"
+            style="width: 100%"
+        />
+        <h1 style="font-size: 36px; font-weight: 600; padding: 20px 0">
+            ADD RECORD
+        </h1>
+        <div class="w-full mx-2 flex-1 svelte-1l8159u">
+            <div
+                class="font-bold h-6 mt-3 text-gray-600 text-xs leading-8 uppercase"
+            >
+                App Name:
+            </div>
+            <div
+                class="bg-white my-2 p-1 flex border border-gray-200 rounded svelte-1l8159u"
+            >
+                <input
+                    class="p-1 px-2 appearance-none outline-none w-full text-gray-800"
+                    type="text"
+                    id="appName"
+                    placeholder="Enter App Name"
+                />
+            </div>
+        </div>
+        <div class="w-full mx-2 flex-1 svelte-1l8159u">
+            <div
+                class="font-bold h-6 mt-3 text-gray-600 text-xs leading-8 uppercase"
+            >
+                Form Name:
+            </div>
+            <div
+                class="bg-white my-2 p-1 flex border border-gray-200 rounded svelte-1l8159u"
+            >
+                <input
+                    class="p-1 px-2 appearance-none outline-none w-full text-gray-800"
+                    type="text"
+                    id="formName"
+                    placeholder="Enter Form Name"
+                />
+            </div>
+        </div>
+        <div
+            class="w-full mx-2 flex-1 svelte-1l8159u"
+            style="padding: 0 0 20px"
+        >
+            <div
+                class="font-bold h-6 mt-3 text-gray-600 text-xs leading-8 uppercase"
+            >
+                JSON Data:
+            </div>
+            <div
+                class="bg-white my-2 p-1 flex border border-gray-200 rounded svelte-1l8159u"
+            >
+                <textarea
+                    class="p-1 px-2 appearance-none outline-none w-full text-gray-800"
+                    type="text"
+                    id="jsonData"
+                    placeholder="Enter Json Data"
+                ></textarea>
+            </div>
+        </div>
+
+        <button
+            class="bg-indigo-500 text-white active:bg-indigo-600 text-xs font-bold uppercase px-3 py-1 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+            onclick="submitData()"
+        >
+            Submit
+        </button>
+        <img
+            src="https://go.rx-vietnamshows.com/nev-a4-footer"
+            style="width: 100%"
+        />
+    </div>
+</div>
     <div class="chart-container">
       <div class="chart-title">12-Month Revenue Overview: PT vs Sale</div>
       <!-- <div class="legend">
